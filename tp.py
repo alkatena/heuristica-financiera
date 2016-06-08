@@ -7,17 +7,19 @@
 # - precio de venta al final de semana 1
 # - precio de compra al inicio de semana 2
 # - precio de venta al final de semana 2
+# - riesgo de venta
 #
 class Instrumento:
 	#
 	# Constructor de la clase
 	#
-	def __init__(self, nombre, PC1, PV1, PC2, PV2):
+	def __init__(self, nombre, PC1, PV1, PC2, PV2, riesgo):
 		self.nombre = nombre
 		self.PC1 = PC1
 		self.PV1 = PV1
 		self.PC2 = PC2
 		self.PV2 = PV2
+		self.riesgo = riesgo
 
 	#
 	# Comparador de igualdad
@@ -165,7 +167,9 @@ class Heuristica:
 		self.stockAcciones.clear()
 		for line in archivoAcciones:
 			values = line.split("\t")
-			instrumento = Instrumento(values[0], float(values[1]), float(values[2]), float(values[3]), float(values[4]))
+			if (len(values) < 6):
+				continue
+			instrumento = Instrumento(values[0], float(values[1]), float(values[2]), float(values[3]), float(values[4]), float(values[5]))
 			self.listaAcciones.append(instrumento)
 			self.listaCompraAcciones1[instrumento] = 0
 			self.listaCompraAcciones2[instrumento] = 0
@@ -182,7 +186,9 @@ class Heuristica:
 		self.stockBonos.clear()
 		for line in archivoBonos:
 			values = line.split("\t")
-			instrumento = Instrumento(values[0], float(values[1]), float(values[2]), float(values[3]), float(values[4]))
+			if (len(values) < 6):
+				continue
+			instrumento = Instrumento(values[0], float(values[1]), float(values[2]), float(values[3]), float(values[4]), float(values[5]))
 			self.listaBonos.append(instrumento)
 			self.listaCompraBonos1[instrumento] = 0
 			self.listaCompraBonos2[instrumento] = 0
@@ -198,7 +204,9 @@ class Heuristica:
 		self.stockFondos.clear()
 		for line in archivoFondos:
 			values = line.split("\t")
-			instrumento = Instrumento(values[0], float(values[1]), float(values[2]), float(values[3]), float(values[4]))
+			if (len(values) < 6):
+				continue
+			instrumento = Instrumento(values[0], float(values[1]), float(values[2]), float(values[3]), float(values[4]), float(values[5]))
 			self.listaFondos.append(instrumento)
 			self.listaCompraFondos1[instrumento] = 0
 			self.listaCompraFondos2[instrumento] = 0
