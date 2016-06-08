@@ -28,27 +28,33 @@ class Instrumento:
 		return self.nombre == other.nombre
 
 	#
+	# Metodo de hashing
+	#
+	def __hash__(self):
+		return hash(self.nombre)
+
+	#
 	# Conversor a string
 	#
-	def __str__():
+	def __str__(self):
 		return self.nombre
 
 	#
 	# Devuelve la ganancia por compra venta en el subperiodo1 (en la semana 1)
 	#
-	def gananciaVentaSubperiodo1():
+	def gananciaVentaSubperiodo1(self):
 		return self.PV1 - self.PC1
 
 	#
 	# Devuelve la ganancia por compra venta en el subperiodo2 (en la semana 2)
 	#
-	def gananciaVentaSubperiodo2():
+	def gananciaVentaSubperiodo2(self):
 		return self.PV2 - self.PC2
 
 	#
 	# Devuelve la ganancia por compra venta en el periodo (en la semana 1 y 2)
 	#
-	def gananciaVentaPeriodo():
+	def gananciaVentaPeriodo(self):
 		return self.PV2 - self.PC1
 
 #
@@ -147,7 +153,7 @@ class Heuristica:
 	#
 	# Carga los datos de disco
 	#
-	def cargar():
+	def cargar(self):
 		archivoDatos = open("datos.txt")
 		archivoAcciones = open("acciones.txt")
 		archivoBonos = open("bonos.txt")
@@ -159,17 +165,19 @@ class Heuristica:
 		self.comisionBonos = float(archivoDatos.readline())
 		self.comisionFondos = float(archivoDatos.readline())
 
-		self.listaAcciones.clear()
-		self.listaCompraAcciones1.clear()
-		self.listaCompraAcciones2.clear()
-		self.listaVentaAcciones1.clear()
-		self.listaVentaAcciones2.clear()
-		self.stockAcciones.clear()
+		self.listaAcciones = []
+		self.listaCompraAcciones1 = {}
+		self.listaCompraAcciones2 = {}
+		self.listaVentaAcciones1 = {}
+		self.listaVentaAcciones2 = {}
+		self.stockAcciones = {}
 		for line in archivoAcciones:
 			values = line.split("\t")
 			if (len(values) < 6):
+				print "Datos invalidos"
 				continue
 			instrumento = Instrumento(values[0], float(values[1]), float(values[2]), float(values[3]), float(values[4]), float(values[5]))
+
 			self.listaAcciones.append(instrumento)
 			self.listaCompraAcciones1[instrumento] = 0
 			self.listaCompraAcciones2[instrumento] = 0
@@ -178,17 +186,19 @@ class Heuristica:
 			self.stockAcciones[instrumento] = 0
 
 
-		self.listaBonos.clear()
-		self.listaCompraBonos1.clear()
-		self.listaCompraBonos2.clear()
-		self.listaVentaBonos1.clear()
-		self.listaVentaBonos2.clear()
-		self.stockBonos.clear()
+		self.listaBonos = []
+		self.listaCompraBonos1 = {}
+		self.listaCompraBonos2 = {}
+		self.listaVentaBonos1 = {}
+		self.listaVentaBonos2 = {}
+		self.stockBonos = {}
 		for line in archivoBonos:
 			values = line.split("\t")
 			if (len(values) < 6):
+				print "Datos invalidos"
 				continue
 			instrumento = Instrumento(values[0], float(values[1]), float(values[2]), float(values[3]), float(values[4]), float(values[5]))
+
 			self.listaBonos.append(instrumento)
 			self.listaCompraBonos1[instrumento] = 0
 			self.listaCompraBonos2[instrumento] = 0
@@ -196,17 +206,19 @@ class Heuristica:
 			self.listaVentaBonos2[instrumento] = 0
 			self.stockBonos[instrumento] = 0
 
-		self.listaFondos.clear()
-		self.listaCompraFondos1.clear()
-		self.listaCompraFondos2.clear()
-		self.listaVentaFondos1.clear()
-		self.listaVentaFondos2.clear()
-		self.stockFondos.clear()
+		self.listaFondos = []
+		self.listaCompraFondos1 = {}
+		self.listaCompraFondos2 = {}
+		self.listaVentaFondos1 = {}
+		self.listaVentaFondos2 = {}
+		self.stockFondos = {}
 		for line in archivoFondos:
 			values = line.split("\t")
 			if (len(values) < 6):
+				print "Datos invalidos"
 				continue
 			instrumento = Instrumento(values[0], float(values[1]), float(values[2]), float(values[3]), float(values[4]), float(values[5]))
+
 			self.listaFondos.append(instrumento)
 			self.listaCompraFondos1[instrumento] = 0
 			self.listaCompraFondos2[instrumento] = 0
@@ -222,36 +234,48 @@ class Heuristica:
 	#
 	# Compra instrumentos al comienzo de la semana 1
 	#
-	def comprarInstrumentosSemana1():
+	def comprarInstrumentosSemana1(self):
 		return
 
 	#
 	# Compra instrumentos al comienzo de la semana 2
 	#
-	def comprarInstrumentosSemana2():
+	def comprarInstrumentosSemana2(self):
 		return
 
 	#
 	# Vende instrumentos al final de la semana 1
 	#
-	def venderInstrumentosSemana1():
+	def venderInstrumentosSemana1(self):
 		return
 
 	#
 	# Vende instrumentos al final de la semana 2
 	#
-	def venderInstrumentosSemana2():
+	def venderInstrumentosSemana2(self):
 		return
 
 	#
 	# Calcula la maxima ganancia por ventas
 	#
-	def calcularMaximo():
+	def calcularMaximo(self):
 		return
 
 	#
 	# Imprime la solucion
 	#
-	def imprimirSolucion():
+	def imprimirSolucion(self):
 		return
+
+	def ejecutar(self):
+		self.cargar()
+		self.comprarInstrumentosSemana1()
+		self.venderInstrumentosSemana1()
+		self.comprarInstrumentosSemana2()
+		self.venderInstrumentosSemana2()
+		self.calcularMaximo()
+		self.imprimirSolucion()
+
+heuristica = Heuristica()
+heuristica.ejecutar()
 
