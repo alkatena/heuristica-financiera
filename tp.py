@@ -258,12 +258,13 @@ class Heuristica:
 	# Vende instrumentos al final de la semana 2
 	#
 	def venderInstrumentosSemana2(self):
+		for k in 
 		return
 
 	#
 	# Calcula la maxima ganancia por ventas
 	#
-	def calcularMaximo(self):
+	def calcularFuncional(self):
 		maximo = 0
 
 		for k in self.listaCompraAcciones1:
@@ -341,7 +342,7 @@ class Heuristica:
 		self.venderInstrumentosSemana1()
 		self.comprarInstrumentosSemana2()
 		self.venderInstrumentosSemana2()
-		self.calcularMaximo()
+		self.calcularFuncional()
 		self.imprimirSolucion()
 
 heuristica = Heuristica()
