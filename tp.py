@@ -151,6 +151,7 @@ class Heuristica:
 		self.stockFondos = {}
 		self.sobrante = 0
 		self.maximo = 0
+		self.capitalDisponiblePeriodo2 = 0
 
 	#
 	# Carga los datos de disco
@@ -240,7 +241,58 @@ class Heuristica:
 	# Compra instrumentos al comienzo de la semana 1
 	#
 	def comprarInstrumentosSemana1(self):
-		return
+		gastadoAcciones = self.comprarInstrumentoSemana1("acciones", self.listaAcciones, 10)
+		gastadoBonos = self.comprarInstrumentoSemana1("bonos", self.listaBonos, 10)
+		gastadoFondos = self.comprarInstrumentoSemana1("fondos", self.listaFondos, 30)
+		return gastadoFondos + gastadoBonos + gastadoAcciones
+
+	def comprarInstrumentoSemana1(self, tipoInstrumento, listaInstrumentosDisponibles, porcentajeMinimo):
+		capitalMinimoInstrumento = self.capitalMaximo * porcentajeMinimo / 100
+		listaOrdenada = sorted(listaInstrumentosDisponibles, cmp=comparador1, reverse=True)
+		acumuladoCompra = 0
+		listaCompraInstrumentos = {}
+		if tipoInstrumento == "acciones":
+			listaCompraInstrumentos = self.listaCompraAcciones1
+		elif tipoInstrumento == "bonos":
+			listaCompraInstrumentos = self.listaCompraBonos1
+		elif tipoInstrumento == "fondos":
+			listaCompraInstrumentos = self.listaCompraFondos1
+
+		for instrumento in listaOrdenada:
+			#print ("BENEFICIO DEL ACCION %s: %d" % (instrumento.nombre, max(instrumento.gananciaVentaSubperiodo1(), instrumento.gananciaVentaPeriodo())))
+			if (acumuladoCompra > capitalMinimoInstrumento):
+				break
+			if (instrumento.riesgo > self.riesgoMaximo):
+				continue
+			while (acumuladoCompra <= capitalMinimoInstrumento):
+				acumuladoCompra += instrumento.PC1
+				listaCompraInstrumentos[instrumento] += 1
+			print "[PERIODO 1 - COMPRA] INSTRUMENTO %s TOTAL GASTADO: %d" % (instrumento.nombre , acumuladoCompra)
+		return acumuladoCompra
+
+	def comprarInstrumentoSemana2(self, tipoInstrumento, listaInstrumentosDisponibles, porcentajeMinimo):
+		capitalMinimoInstrumento = self.capitalDisponiblePeriodo2 * porcentajeMinimo / 100
+		listaOrdenada = sorted(listaInstrumentosDisponibles, cmp=comparador2, reverse=True)
+		acumuladoCompra = 0
+		listaCompraInstrumentos = {}
+		if tipoInstrumento == "acciones":
+			listaCompraInstrumentos = self.listaCompraAcciones2
+		elif tipoInstrumento == "bonos":
+			listaCompraInstrumentos = self.listaCompraBonos2
+		elif tipoInstrumento == "fondos":
+			listaCompraInstrumentos = self.listaCompraFondos2
+
+		for instrumento in listaOrdenada:
+			#print ("BENEFICIO DEL ACCION %s: %d" % (instrumento.nombre, max(instrumento.gananciaVentaSubperiodo1(), instrumento.gananciaVentaPeriodo())))
+			if (acumuladoCompra > capitalMinimoInstrumento):
+				break
+			if (instrumento.riesgo > self.riesgoMaximo):
+				continue
+			while (acumuladoCompra <= capitalMinimoInstrumento):
+				acumuladoCompra += instrumento.PC1
+				listaCompraInstrumentos[instrumento] += 1
+			print "[PERIODO 2 - COMPRA] INSTRUMENTO %s TOTAL GASTADO: %d" % (instrumento.nombre , acumuladoCompra)
+		return acumuladoCompra
 
 	#
 	# Compra instrumentos al comienzo de la semana 2
@@ -337,9 +389,9 @@ class Heuristica:
 
 	def ejecutar(self):
 		self.cargar()
-		self.comprarInstrumentosSemana1()
+		totalGastadoSemana1 = self.comprarInstrumentosSemana1()
 		self.venderInstrumentosSemana1()
-		self.comprarInstrumentosSemana2()
+		totalGastadoSemana2 = self.comprarInstrumentosSemana2()
 		self.venderInstrumentosSemana2()
 		self.calcularMaximo()
 		self.imprimirSolucion()
