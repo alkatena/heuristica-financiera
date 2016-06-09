@@ -1,0 +1,41 @@
+GLPK 4.55 - SENSITIVITY ANALYSIS REPORT                                                                         Page   1
+
+Problem:    modelo
+Objective:  Z = 56000 (MAXimum)
+
+   No. Row name     St      Activity         Slack   Lower bound       Activity      Obj coef  Obj value at Limiting
+                                          Marginal   Upper bound          range         range   break point variable
+------ ------------ -- ------------- ------------- -------------  ------------- ------------- ------------- ------------
+     1 X4           BS     400.00000     200.00000          -Inf      160.00000     -75.00000   26000.00000 X2
+                                            .          600.00000      400.00000          +Inf          +Inf
+
+     2 X5           NU     320.00000        .               -Inf       80.00000    -200.00000    8000.00000 X1
+                                         200.00000     320.00000      453.33333          +Inf   82666.66667 X4
+
+     3 X6           BS      40.00000      80.00000          -Inf       40.00000          -Inf          -Inf
+                                            .          120.00000      160.00000     200.00000   64000.00000 X7
+
+     4 X7           NL      40.00000        .           40.00000         .               -Inf   64000.00000 X3
+                                        -200.00000          +Inf      120.00000     200.00000   40000.00000 X6
+
+     5 Z            BS   56000.00000  -56000.00000          -Inf     8000.00000      -1.00000        .      X5
+                                            .               +Inf    56000.00000          +Inf          +Inf
+
+GLPK 4.55 - SENSITIVITY ANALYSIS REPORT                                                                         Page   2
+
+Problem:    modelo
+Objective:  Z = 56000 (MAXimum)
+
+   No. Column name  St      Activity      Obj coef   Lower bound       Activity      Obj coef  Obj value at Limiting
+                                          Marginal   Upper bound          range         range   break point variable
+------ ------------ -- ------------- ------------- -------------  ------------- ------------- ------------- ------------
+     1 X1           BS     120.00000     400.00000        .                -Inf     250.00000   38000.00000 X2
+                                            .               +Inf      120.00000          +Inf          +Inf
+
+     2 X2           NL        .          250.00000        .          -100.00000          -Inf   71000.00000 X4
+                                        -150.00000          +Inf      120.00000     400.00000   38000.00000 X1
+
+     3 X3           BS      40.00000     200.00000        .            40.00000          -Inf          -Inf
+                                            .               +Inf      120.00000     400.00000   64000.00000 X7
+
+End of report

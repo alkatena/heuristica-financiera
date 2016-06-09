@@ -1,0 +1,40 @@
+Problem:    modelo
+Rows:       5
+Columns:    3
+Non-zeros:  11
+Status:     OPTIMAL
+Objective:  Z = 56000 (MAXimum)
+
+   No.   Row name   St   Activity     Lower bound   Upper bound    Marginal
+------ ------------ -- ------------- ------------- ------------- -------------
+     1 X4           B            400                         600 
+     2 X5           NU           320                         320           200 
+     3 X6           B             40                         120 
+     4 X7           NL            40            40                        -200 
+     5 Z            B          56000                             
+
+   No. Column name  St   Activity     Lower bound   Upper bound    Marginal
+------ ------------ -- ------------- ------------- ------------- -------------
+     1 X1           B            120             0               
+     2 X2           NL             0             0                        -150 
+     3 X3           B             40             0               
+
+Karush-Kuhn-Tucker optimality conditions:
+
+KKT.PE: max.abs.err = 0.00e+00 on row 0
+        max.rel.err = 0.00e+00 on row 0
+        High quality
+
+KKT.PB: max.abs.err = 0.00e+00 on row 0
+        max.rel.err = 0.00e+00 on row 0
+        High quality
+
+KKT.DE: max.abs.err = 0.00e+00 on column 0
+        max.rel.err = 0.00e+00 on column 0
+        High quality
+
+KKT.DB: max.abs.err = 0.00e+00 on row 0
+        max.rel.err = 0.00e+00 on row 0
+        High quality
+
+End of output
