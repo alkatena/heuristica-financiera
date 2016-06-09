@@ -149,6 +149,8 @@ class Heuristica:
 		self.stockAcciones = {}
 		self.stockBonos = {}
 		self.stockFondos = {}
+		self.sobrante = 0
+		self.maximo = 0
 
 	#
 	# Carga los datos de disco
@@ -158,6 +160,9 @@ class Heuristica:
 		archivoAcciones = open("acciones.txt")
 		archivoBonos = open("bonos.txt")
 		archivoFondos = open("fondos.txt")
+
+		self.maximo = 0;
+		self.sobrante = 0;
 
 		self.capitalMaximo = float(archivoDatos.readline())
 		self.riesgoMaximo = float(archivoDatos.readline())
@@ -259,12 +264,75 @@ class Heuristica:
 	# Calcula la maxima ganancia por ventas
 	#
 	def calcularMaximo(self):
-		return
+		maximo = 0
+
+		for k in self.listaCompraAcciones1:
+			cantidad = self.listaCompraAcciones1[k]
+			maximo -= cantidad * k.PC1
+			maximo -= self.comisionAcciones * cantidad * k.PC1
+
+		for k in self.listaCompraBonos1:
+			cantidad = self.listaCompraBonos1[k]
+			maximo -= cantidad * k.PC1
+			maximo -= self.comisionBonos * cantidad * k.PC1
+
+		for k in self.listaCompraFondos1:
+			cantidad = self.listaCompraFondos1[k]
+			maximo -= cantidad * k.PC1
+			maximo -= self.comisionFondos * cantidad * k.PC1
+
+		for k in self.listaCompraAcciones2:
+			cantidad = self.listaCompraAcciones2[k]
+			maximo -= cantidad * k.PC2
+			maximo -= self.comisionAcciones * cantidad * k.PC2
+
+		for k in self.listaCompraBonos2:
+			cantidad = self.listaCompraBonos2[k]
+			maximo -= cantidad * k.PC2
+			maximo -= self.comisionBonos * cantidad * k.PC2
+
+		for k in self.listaCompraFondos2:
+			cantidad = self.listaCompraFondos2[k]
+			maximo -= cantidad * k.PC2
+			maximo -= self.comisionFondos * cantidad * k.PC2
+
+		for k in self.listaVentaAcciones1:
+			cantidad = self.listaVentaAcciones1[k]
+			maximo += cantidad * k.PV1
+			maximo -= self.comisionAcciones * cantidad * k.PV1
+
+		for k in self.listaVentaBonos1:
+			cantidad = self.listaVentaBonos1[k]
+			maximo += cantidad * k.PV1
+			maximo -= self.comisionBonos * cantidad * k.PV1
+
+		for k in self.listaVentaFondos1:
+			cantidad = self.listaVentaFondos1[k]
+			maximo += cantidad * k.PV1
+			maximo -= self.comisionFondos * cantidad * k.PV1
+
+		for k in self.listaVentaAcciones2:
+			cantidad = self.listaVentaAcciones2[k]
+			maximo += cantidad * k.PV2
+			maximo -= self.comisionAcciones * cantidad * k.PV2
+
+		for k in self.listaVentaBonos2:
+			cantidad = self.listaVentaBonos2[k]
+			maximo += cantidad * k.PV2
+			maximo -= self.comisionBonos * cantidad * k.PC2
+
+		for k in self.listaVentaFondos2:
+			cantidad = self.listaVentaFondos2[k]
+			maximo += cantidad * k.PV2
+			maximo -= self.comisionFondos * cantidad * k.PV2
+
+		return maximo
 
 	#
 	# Imprime la solucion
 	#
 	def imprimirSolucion(self):
+		print "LA MAXIMA GANANCIA POR VENTAS ES: " + `self.maximo`
 		return
 
 	def ejecutar(self):
