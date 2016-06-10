@@ -265,9 +265,13 @@ class Heuristica:
 			if (instrumento.riesgo > self.riesgoMaximo):
 				continue
 			while (acumuladoCompra <= capitalMinimoInstrumento):
+				# Si comprando ese instrumento me paso de lo que tengo disponible, paso al siguiente instrumento
+				if (instrumento.PC1 > self.capitalMaximo - acumuladoCompra):
+					break
 				acumuladoCompra += instrumento.PC1
 				listaCompraInstrumentos[instrumento] += 1
-			print "[PERIODO 1 - COMPRA] INSTRUMENTO %s TOTAL GASTADO: %d" % (instrumento.nombre , acumuladoCompra)
+			if (listaCompraInstrumentos[instrumento] > 0):
+				print "[PERIODO 1 - COMPRA] INSTRUMENTO %s TOTAL GASTADO: %d" % (instrumento.nombre , acumuladoCompra)
 		return acumuladoCompra
 
 	def comprarInstrumentoSemana2(self, tipoInstrumento, listaInstrumentosDisponibles, porcentajeMinimo):
@@ -275,43 +279,127 @@ class Heuristica:
 		listaOrdenada = sorted(listaInstrumentosDisponibles, cmp=comparador2, reverse=True)
 		acumuladoCompra = 0
 		listaCompraInstrumentos = {}
+		stockInstrumento = {}
 		if tipoInstrumento == "acciones":
 			listaCompraInstrumentos = self.listaCompraAcciones2
+			stockInstrumento = self.stockAcciones
 		elif tipoInstrumento == "bonos":
 			listaCompraInstrumentos = self.listaCompraBonos2
+			stockInstrumento = self.stockBonos
 		elif tipoInstrumento == "fondos":
 			listaCompraInstrumentos = self.listaCompraFondos2
+			stockInstrumento = self.stockFondos
+
 
 		for instrumento in listaOrdenada:
 			#print ("BENEFICIO DEL ACCION %s: %d" % (instrumento.nombre, max(instrumento.gananciaVentaSubperiodo1(), instrumento.gananciaVentaPeriodo())))
-			if (acumuladoCompra > capitalMinimoInstrumento):
+			if (acumuladoCompra + stockInstrumento[instrumento] > capitalMinimoInstrumento):
 				break
 			if (instrumento.riesgo > self.riesgoMaximo):
 				continue
 			while (acumuladoCompra <= capitalMinimoInstrumento):
+				# Si comprando ese instrumento me paso de lo que tengo disponible, paso al siguiente instrumento
+				if (instrumento.PC1 > self.capitalMaximo - acumuladoCompra):
+					break
 				acumuladoCompra += instrumento.PC1
 				listaCompraInstrumentos[instrumento] += 1
-			print "[PERIODO 2 - COMPRA] INSTRUMENTO %s TOTAL GASTADO: %d" % (instrumento.nombre , acumuladoCompra)
+			if (listaCompraInstrumentos[instrumento] > 0):
+				print "[PERIODO 2 - COMPRA] INSTRUMENTO %s TOTAL GASTADO: %d" % (instrumento.nombre , acumuladoCompra)
 		return acumuladoCompra
 
 	#
 	# Compra instrumentos al comienzo de la semana 2
 	#
 	def comprarInstrumentosSemana2(self):
-		return
+		gastadoAcciones = self.comprarInstrumentoSemana2("acciones", self.listaAcciones, 10)
+		gastadoBonos = self.comprarInstrumentoSemana2("bonos", self.listaBonos, 10)
+		gastadoFondos = self.comprarInstrumentoSemana2("fondos", self.listaFondos, 30)
+		return gastadoFondos + gastadoBonos + gastadoAcciones
 
 	#
 	# Vende instrumentos al final de la semana 1
 	#
-	def venderInstrumentosSemana1(self):
-		return
+	def venderInstrumentoSemana1(self, tipoInstrumento):
+		acumuladoVenta = 0
+		listaVentaInstrumento = {}
+		stockInstrumento = {}
+		listaCompraInstrumentos = {}
+		if tipoInstrumento == "acciones":
+			listaCompraInstrumentos = self.listaCompraAcciones1
+			listaVentaInstrumento = self.listaVentaAcciones1
+			stockInstrumento = self.stockAcciones
+		elif tipoInstrumento == "bonos":
+			listaCompraInstrumentos = self.listaCompraBonos1
+			listaVentaInstrumento = self.listaVentaBonos1
+			stockInstrumento = self.stockBonos
+		elif tipoInstrumento == "fondos":
+			listaCompraInstrumentos = self.listaCompraFondos1
+			listaVentaInstrumento = self.listaVentaFondos1
+			stockInstrumento = self.stockFondos
+
+		for instrumento in listaCompraInstrumentos:
+			# Recorremos la lista de instrumentos, a los que compramos vemos si conviene venderlos. de ser asi, lo agregamos a la lista de vendidos. caso contrario quedan en la lista de stock
+			#print "[PERIODO 1 - VENTA] INSTRUMENTO %s GANANCIA SUBPERIODO1: %d  GANANCIA SUBPERIODO2: %d" % (instrumento.nombre , instrumento.gananciaVentaSubperiodo1(), instrumento.gananciaVentaSubperiodo2())
+
+			if (listaCompraInstrumentos[instrumento] > 0 and instrumento.gananciaVentaSubperiodo1() > instrumento.gananciaVentaSubperiodo2()):
+				listaVentaInstrumento[instrumento] = listaCompraInstrumentos[instrumento]
+				acumuladoVenta += instrumento.PV1 * listaCompraInstrumentos[instrumento]
+				stockInstrumento[instrumento] = 0
+				print "[PERIODO 1 - VENTA] INSTRUMENTO %s TOTAL OBTENIDO: %d" % (instrumento.nombre , acumuladoVenta)
+			elif (listaCompraInstrumentos[instrumento] > 0):
+				print "[PERIODO 1 - VENTA] STOCKEAMOS INSTRUMENTO %s CANTIDAD: %d" % (instrumento.nombre , listaCompraInstrumentos[instrumento])
+				stockInstrumento[instrumento] = listaCompraInstrumentos[instrumento]
+		return acumuladoVenta
+
+	def venderInstrumentoSemana2(self, tipoInstrumento):
+		acumuladoVenta = 0
+		listaVentaInstrumento = {}
+		listaCompraInstrumentos = {}
+		stockInstrumentos = {}
+
+		if tipoInstrumento == "acciones":
+			listaCompraInstrumentos = self.listaCompraAcciones2
+			listaVentaInstrumento = self.listaVentaAcciones2
+			stockInstrumentos = self.stockAcciones
+		elif tipoInstrumento == "bonos":
+			listaCompraInstrumentos = self.listaCompraBonos2
+			listaVentaInstrumento = self.listaVentaBonos2
+			stockInstrumentos = self.stockBonos
+		elif tipoInstrumento == "fondos":
+			listaCompraInstrumentos = self.listaCompraFondos2
+			listaVentaInstrumento = self.listaVentaFondos2
+			stockInstrumentos = self.stockFondos
+
+		for instrumento in listaCompraInstrumentos:
+			# Recorremos la lista de instrumentos, a los que compramos vemos si conviene venderlos. de ser asi, lo agregamos a la lista de vendidos. caso contrario quedan en la lista de stock
+			#print "[PERIODO 1 - VENTA] INSTRUMENTO %s GANANCIA SUBPERIODO1: %d  GANANCIA SUBPERIODO2: %d" % (instrumento.nombre , instrumento.gananciaVentaSubperiodo1(), instrumento.gananciaVentaSubperiodo2())
+			if (listaCompraInstrumentos[instrumento] > 0):
+				acumuladoVenta += listaCompraInstrumentos[instrumento] * instrumento.PV2
+				listaVentaInstrumento[instrumento] = listaCompraInstrumentos[instrumento]
+				print "[PERIODO 2 - VENTA] INSTRUMENTO %s TOTAL OBTENIDO %d" % (instrumento.nombre , listaCompraInstrumentos[instrumento] * instrumento.PV2)
+		
+		for instrumento in stockInstrumentos:
+			if (stockInstrumentos[instrumento] > 0):
+				acumuladoVenta += stockInstrumentos[instrumento] * instrumento.PV2
+				listaVentaInstrumento[instrumento] = stockInstrumentos[instrumento]
+				print "[PERIODO 2 - VENTA STOCK] INSTRUMENTO %s TOTAL OBTENIDO: %d" % (instrumento.nombre , stockInstrumentos[instrumento] * instrumento.PV2)
+
+		return acumuladoVenta
 
 	#
 	# Vende instrumentos al final de la semana 2
 	#
 	def venderInstrumentosSemana2(self):
-		for k in 
-		return
+		obtenidoAcciones = self.venderInstrumentoSemana2("acciones")
+		obtenidoBonos = self.venderInstrumentoSemana2("bonos")
+		obtenidoFondos = self.venderInstrumentoSemana2("fondos")
+		return obtenidoFondos + obtenidoBonos + obtenidoAcciones
+
+	def venderInstrumentosSemana1(self):
+		obtenidoAcciones = self.venderInstrumentoSemana1("acciones")
+		obtenidoBonos = self.venderInstrumentoSemana1("bonos")
+		obtenidoFondos = self.venderInstrumentoSemana1("fondos")
+		return obtenidoFondos + obtenidoBonos + obtenidoAcciones
 
 	#
 	# Calcula la maxima ganancia por ventas
@@ -391,9 +479,12 @@ class Heuristica:
 	def ejecutar(self):
 		self.cargar()
 		totalGastadoSemana1 = self.comprarInstrumentosSemana1()
-		self.venderInstrumentosSemana1()
+		totalVendidoSemana1 = self.venderInstrumentosSemana1()
+		self.capitalDisponiblePeriodo2 = self.capitalMaximo - totalGastadoSemana1 + totalVendidoSemana1
+		print "CAPITAL DISPONIBLE LUEGO DEL PRIMER PERIODO %d" % self.capitalDisponiblePeriodo2
 		totalGastadoSemana2 = self.comprarInstrumentosSemana2()
-		self.venderInstrumentosSemana2()
+		totalVendidoSemana2 = self.venderInstrumentosSemana2()
+		print "CAPITAL DISPONIBLE LUEGO DEL SEGUNDO PERIODO %d" % (self.capitalDisponiblePeriodo2 - totalGastadoSemana2 + totalVendidoSemana2)
 		self.calcularFuncional()
 		self.imprimirSolucion()
 
