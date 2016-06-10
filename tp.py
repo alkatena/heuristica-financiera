@@ -242,7 +242,7 @@ class Heuristica:
 	#
 	def comprarInstrumentosSemana1(self):
 		gastadoAcciones = self.comprarInstrumentoSemana1("acciones", self.listaAcciones, 10)
-		gastadoBonos = self.comprarInstrumentoSemana1("bonos", self.listaBonos, 10)
+		gastadoBonos = self.comprarInstrumentoSemana1("bonos", self.listaBonos, 20)
 		gastadoFondos = self.comprarInstrumentoSemana1("fondos", self.listaFondos, 30)
 		return gastadoFondos + gastadoBonos + gastadoAcciones
 
@@ -312,7 +312,7 @@ class Heuristica:
 	#
 	def comprarInstrumentosSemana2(self):
 		gastadoAcciones = self.comprarInstrumentoSemana2("acciones", self.listaAcciones, 10)
-		gastadoBonos = self.comprarInstrumentoSemana2("bonos", self.listaBonos, 10)
+		gastadoBonos = self.comprarInstrumentoSemana2("bonos", self.listaBonos, 20)
 		gastadoFondos = self.comprarInstrumentoSemana2("fondos", self.listaFondos, 30)
 		return gastadoFondos + gastadoBonos + gastadoAcciones
 
