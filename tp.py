@@ -152,6 +152,7 @@ class Heuristica:
 		self.sobrante = 0
 		self.maximo = 0
 		self.capitalDisponiblePeriodo2 = 0
+		self.riesgoAcumulado = 0
 
 	#
 	# Carga los datos de disco
@@ -162,8 +163,9 @@ class Heuristica:
 		archivoBonos = open("bonos.txt")
 		archivoFondos = open("fondos.txt")
 
-		self.maximo = 0;
-		self.sobrante = 0;
+		self.maximo = 0
+		self.sobrante = 0
+		self.riesgoAcumulado = 0
 
 		self.capitalMaximo = float(archivoDatos.readline())
 		self.riesgoMaximo = float(archivoDatos.readline())
@@ -262,13 +264,14 @@ class Heuristica:
 			#print ("BENEFICIO DEL ACCION %s: %d" % (instrumento.nombre, max(instrumento.gananciaVentaSubperiodo1(), instrumento.gananciaVentaPeriodo())))
 			if (acumuladoCompra > capitalMinimoInstrumento):
 				break
-			if (instrumento.riesgo > self.riesgoMaximo):
-				continue
 			while (acumuladoCompra <= capitalMinimoInstrumento):
+				if (self.riesgoAcumulado + instrumento.riesgo > self.riesgoMaximo):
+					break
 				# Si comprando ese instrumento me paso de lo que tengo disponible, paso al siguiente instrumento
 				if (instrumento.PC1 > self.capitalMaximo - acumuladoCompra):
 					break
 				acumuladoCompra += instrumento.PC1
+				self.riesgoAcumulado += instrumento.riesgo
 				listaCompraInstrumentos[instrumento] += 1
 			if (listaCompraInstrumentos[instrumento] > 0):
 				print "[PERIODO 1 - COMPRA] INSTRUMENTO %s TOTAL GASTADO: %d" % (instrumento.nombre , acumuladoCompra)
@@ -295,13 +298,14 @@ class Heuristica:
 			#print ("BENEFICIO DEL ACCION %s: %d" % (instrumento.nombre, max(instrumento.gananciaVentaSubperiodo1(), instrumento.gananciaVentaPeriodo())))
 			if (acumuladoCompra + stockInstrumento[instrumento] > capitalMinimoInstrumento):
 				break
-			if (instrumento.riesgo > self.riesgoMaximo):
-				continue
 			while (acumuladoCompra <= capitalMinimoInstrumento):
+				if (self.riesgoAcumulado + instrumento.riesgo > self.riesgoMaximo):
+					break
 				# Si comprando ese instrumento me paso de lo que tengo disponible, paso al siguiente instrumento
 				if (instrumento.PC1 > self.capitalMaximo - acumuladoCompra):
 					break
 				acumuladoCompra += instrumento.PC1
+				self.riesgoAcumulado += instrumento.riesgo
 				listaCompraInstrumentos[instrumento] += 1
 			if (listaCompraInstrumentos[instrumento] > 0):
 				print "[PERIODO 2 - COMPRA] INSTRUMENTO %s TOTAL GASTADO: %d" % (instrumento.nombre , acumuladoCompra)
@@ -565,4 +569,3 @@ class Heuristica:
 
 heuristica = Heuristica()
 heuristica.ejecutar()
-
