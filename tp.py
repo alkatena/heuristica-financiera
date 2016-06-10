@@ -473,7 +473,82 @@ class Heuristica:
 	# Imprime la solucion
 	#
 	def imprimirSolucion(self):
-		print "LA MAXIMA GANANCIA POR VENTAS ES: " + `self.maximo`
+		print ""
+		print "---------------------------------"
+		print ""
+		print "EN LA PRIMER SEMANA SE RECOMIENDA"
+
+		for k in self.listaCompraAcciones1:
+			cantidad = self.listaCompraAcciones1[k]
+			if (cantidad > 0):
+				print "COMPRAR %s UNIDADES DE ACCION %s" %(cantidad, k.nombre)
+		for k in self.listaCompraBonos1:
+			cantidad = self.listaCompraBonos1[k]
+			if (cantidad > 0):
+				print "COMPRAR %s UNIDADES DE BONO %s" %(cantidad, k.nombre)
+		for k in self.listaCompraFondos1:
+			cantidad = self.listaCompraFondos1[k]
+			if (cantidad > 0):
+				print "COMPRAR %s UNIDADES DE FONDO %s" %(cantidad, k.nombre)
+		for k in self.listaVentaAcciones1:
+			cantidad = self.listaVentaAcciones1[k]
+			if (cantidad > 0):
+				print "VENDER %s UNIDADES DE ACCION %s" %(cantidad, k.nombre)
+		for k in self.listaVentaBonos1:
+			cantidad = self.listaVentaBonos1[k]
+			if (cantidad > 0):
+				print "VENDER %s UNIDADES DE BONO %s" %(cantidad, k.nombre)
+		for k in self.listaVentaFondos1:
+			cantidad = self.listaVentaFondos1[k]
+			if (cantidad > 0):
+				print "VENDER %s UNIDADES DE FONDO %s" %(cantidad, k.nombre)
+
+		print ""
+		print "EN LA SEGUNDA SEMANA SE RECOMIENDA"
+
+		for k in self.listaCompraAcciones2:
+			cantidad = self.listaCompraAcciones2[k]
+			if (cantidad > 0):
+				print "COMPRAR %s UNIDADES DE ACCION %s" %(cantidad, k.nombre)
+		for k in self.listaCompraBonos2:
+			cantidad = self.listaCompraBonos2[k]
+			if (cantidad > 0):
+				print "COMPRAR %s UNIDADES DE BONO %s" %(cantidad, k.nombre)
+		for k in self.listaCompraFondos2:
+			cantidad = self.listaCompraFondos2[k]
+			if (cantidad > 0):
+				print "COMPRAR %s UNIDADES DE FONDO %s" %(cantidad, k.nombre)
+		for k in self.listaVentaAcciones2:
+			cantidad = self.listaVentaAcciones2[k]
+			if (cantidad > 0):
+				print "VENDER %s UNIDADES DE ACCION %s" %(cantidad, k.nombre)
+		for k in self.listaVentaBonos2:
+			cantidad = self.listaVentaBonos2[k]
+			if (cantidad > 0):
+				print "VENDER %s UNIDADES DE BONO %s" %(cantidad, k.nombre)
+		for k in self.listaVentaFondos2:
+			cantidad = self.listaVentaFondos2[k]
+			if (cantidad > 0):
+				print "VENDER %s UNIDADES DE FONDO %s" %(cantidad, k.nombre)
+
+		print ""
+		print "ENTRE SEMANAS SE RECOMIENDA GUARDAR EL SIGUIENTE STOCK"
+
+		for k in self.stockAcciones:
+			cantidad = self.stockAcciones[k]
+			if (cantidad > 0):
+				print "%s UNIDADES DE STOCK DE ACCION %s" % (cantidad, k.nombre)
+		for k in self.stockBonos:
+			cantidad = self.stockBonos[k]
+			if (cantidad > 0):
+				print "%s UNIDADES DE STOCK DE BONO %s" % (cantidad, k.nombre)
+		for k in self.stockFondos:
+			cantidad = self.stockFondos[k]
+			if (cantidad > 0):
+				print "%s UNIDADES DE STOCK DE FONDO %s" % (cantidad, k.nombre)
+		print ""
+		print "LA MAXIMA GANANCIA POR VENTAS ES: %s" % self.maximo
+
 		return
 
 	def ejecutar(self):
@@ -485,7 +560,7 @@ class Heuristica:
 		totalGastadoSemana2 = self.comprarInstrumentosSemana2()
 		totalVendidoSemana2 = self.venderInstrumentosSemana2()
 		print "CAPITAL DISPONIBLE LUEGO DEL SEGUNDO PERIODO %d" % (self.capitalDisponiblePeriodo2 - totalGastadoSemana2 + totalVendidoSemana2)
-		self.calcularFuncional()
+		self.maximo = self.calcularFuncional()
 		self.imprimirSolucion()
 
 heuristica = Heuristica()
